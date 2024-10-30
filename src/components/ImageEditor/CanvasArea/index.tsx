@@ -1,8 +1,8 @@
 // src/components/ImageEditor/CanvasArea/index.tsx
 
 import React, { useRef } from 'react';
-import { Stage, Layer } from 'react-konva';
-import { CanvasContainer } from './style';
+import { Layer } from 'react-konva';
+import { Canva, CanvasContainer } from './style';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { layersState, selectedLayerIdState } from '@/state/atoms';
 import ImageLayer from '../CanvasElements/ImageLayer';
@@ -27,12 +27,11 @@ const CanvasArea: React.FC = () => {
 
   return (
     <CanvasContainer>
-      <Stage
+      <Canva
         ref={stageRef}
-        width={window.innerWidth - 400} // Ajuste conforme a largura da sidebar
-        height={window.innerHeight}
-        onMouseDown={handleStageMouseDown}
-        style={{ backgroundColor: '#f0f0f0' }}>
+        width={window.innerHeight - 200} // Ajuste conforme a largura da sidebar
+        height={window.innerHeight - 200}
+        onMouseDown={handleStageMouseDown}>
         <Layer>
           {layers
             .filter((layer) => layer.visible)
@@ -49,7 +48,7 @@ const CanvasArea: React.FC = () => {
           {/* Componente do Transformer */}
           <LayerTransformer shapeRefs={shapeRefs} />
         </Layer>
-      </Stage>
+      </Canva>
     </CanvasContainer>
   );
 };

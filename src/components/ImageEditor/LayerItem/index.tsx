@@ -1,7 +1,7 @@
 // src/components/ImageEditor/LayerItem/index.ts
 import React from 'react';
 import { LayerType } from '@/types';
-import { TextAa, Image } from '@/icons';
+import { TextAa, Image, Eye, EyeSlash, Lock, LockOpen, ArrowUp, ArrowDown, Trash } from '@/icons';
 import { LayerItemContainer, LayerNameInput, IconButton } from './style';
 
 interface LayerItemProps {
@@ -27,7 +27,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
 }) => {
   return (
     <LayerItemContainer selected={isSelected} onClick={() => onSelect(layer.id)}>
-      {layer.type === 'text' ? <TextAa /> : <Image />}
+      {layer.type === 'text' ? <TextAa style={{ color: 'black' }} /> : <Image style={{ color: 'black' }} />}
       {/* Campo para renomear a camada */}
       <LayerNameInput value={layer.name} onChange={(e) => onRename(layer.id, e.target.value)} />
       {/* Botão para alternar visibilidade */}
@@ -36,7 +36,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
           e.stopPropagation();
           onToggleVisible(layer.id);
         }}>
-        {layer.visible ? '👁️' : '🚫'}
+        {layer.visible ? <Eye style={{ color: 'black' }} /> : <EyeSlash style={{ color: 'black' }} />}
       </IconButton>
       {/* Botão para alternar bloqueio */}
       <IconButton
@@ -44,7 +44,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
           e.stopPropagation();
           onToggleLocked(layer.id);
         }}>
-        {layer.locked ? '🔒' : '🔓'}
+        {layer.locked ? <Lock style={{ color: 'black' }} /> : <LockOpen style={{ color: 'black' }} />}
       </IconButton>
       {/* Botões para reordenar */}
       <IconButton
@@ -52,14 +52,14 @@ const LayerItem: React.FC<LayerItemProps> = ({
           e.stopPropagation();
           onReorder(layer.id, 'up');
         }}>
-        ⬆️
+        <ArrowDown style={{ color: 'black' }} />
       </IconButton>
       <IconButton
         onClick={(e) => {
           e.stopPropagation();
           onReorder(layer.id, 'down');
         }}>
-        ⬇️
+        <ArrowUp style={{ color: 'black' }} />
       </IconButton>
       {/* Botão para deletar a camada */}
       <IconButton
@@ -67,7 +67,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
           e.stopPropagation();
           onDelete(layer.id);
         }}>
-        🗑️
+        <Trash style={{ color: 'black' }} />
       </IconButton>
     </LayerItemContainer>
   );

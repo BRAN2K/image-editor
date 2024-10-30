@@ -13,7 +13,6 @@ const Home: React.FC = () => {
   return (
     <RecoilRoot>
       <div>
-        <h1>Meu Editor de Imagens</h1>
         <Editor />
       </div>
     </RecoilRoot>
