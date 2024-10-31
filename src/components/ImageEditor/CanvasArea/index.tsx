@@ -4,15 +4,20 @@ import React, { useRef } from 'react';
 import { Layer } from 'react-konva';
 import { Canva, CanvasContainer } from './style';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { layersState, selectedLayerIdState } from '@/state/atoms';
+import { layersState, selectedLayerIdState, gridVisibleState, gridSizeState } from '@/state/atoms';
 import ImageLayer from '../CanvasElements/ImageLayer';
 import TextLayer from '../CanvasElements/TextLayer';
 import LayerTransformer from '../CanvasElements/LayerTransformer';
+import GridLayer from '../CanvasElements/GridLayer';
 import Konva from 'konva';
 
 const CanvasArea: React.FC = () => {
   const layers = useRecoilValue(layersState);
   const setSelectedLayerId = useSetRecoilState(selectedLayerIdState);
+
+  // Estados para o grid
+  const gridVisible = useRecoilValue(gridVisibleState);
+  const desiredGridSize = useRecoilValue(gridSizeState);
 
   const stageRef = useRef<Konva.Stage>(null);
   const shapeRefs = useRef<{ [key: string]: Konva.Node }>({});
@@ -25,13 +30,22 @@ const CanvasArea: React.FC = () => {
     }
   };
 
+  const canvasWidth = window.innerHeight - 200; // Ajuste conforme necessário
+  const canvasHeight = window.innerHeight - 200;
+
   return (
     <CanvasContainer>
-      <Canva
-        ref={stageRef}
-        width={window.innerHeight - 200} // Ajuste conforme a largura da sidebar
-        height={window.innerHeight - 200}
-        onMouseDown={handleStageMouseDown}>
+      <Canva ref={stageRef} width={canvasWidth} height={canvasHeight} onMouseDown={handleStageMouseDown}>
+        {/* Adicionar o grid se estiver habilitado */}
+        {gridVisible && (
+          <GridLayer
+            width={canvasWidth}
+            height={canvasHeight}
+            desiredGridSize={desiredGridSize}
+            stroke="#ddd"
+            strokeWidth={1}
+          />
+        )}
         <Layer>
           {layers
             .filter((layer) => layer.visible)
@@ -40,7 +54,7 @@ const CanvasArea: React.FC = () => {
               if (layer.type === 'image' && layer.image) {
                 return <ImageLayer key={layer.id} layer={layer} shapeRefs={shapeRefs} />;
               } else if (layer.type === 'text') {
-                return <TextLayer key={layer.id} layer={layer} shapeRefs={shapeRefs} stageRef={stageRef} />;
+                return <TextLayer key={layer.id} layer={layer} shapeRefs={shapeRefs} />;
               } else {
                 return null;
               }
