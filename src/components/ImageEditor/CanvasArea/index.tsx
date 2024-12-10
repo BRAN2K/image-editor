@@ -4,7 +4,13 @@ import React, { useRef } from 'react';
 import { Layer } from 'react-konva';
 import { Canva, CanvasContainer } from './style';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { layersState, selectedLayerIdState, gridVisibleState, gridSizeState } from '@/state/atoms';
+import {
+  layersState,
+  selectedLayerIdState,
+  gridVisibleState,
+  gridSizeState,
+  keepElementsInsideCanvasState,
+} from '@/state/atoms';
 import ImageLayer from '../CanvasElements/ImageLayer';
 import TextLayer from '../CanvasElements/TextLayer';
 import LayerTransformer from '../CanvasElements/LayerTransformer';
@@ -18,6 +24,8 @@ const CanvasArea: React.FC = () => {
   // Estados para o grid
   const gridVisible = useRecoilValue(gridVisibleState);
   const desiredGridSize = useRecoilValue(gridSizeState);
+  // Estado para manter os elementos dentro do canvas
+  const keepElementsInsideCanvas = useRecoilValue(keepElementsInsideCanvasState);
 
   const stageRef = useRef<Konva.Stage>(null);
   const shapeRefs = useRef<{ [key: string]: Konva.Node }>({});
@@ -52,9 +60,27 @@ const CanvasArea: React.FC = () => {
             .sort((a, b) => a.zIndex - b.zIndex)
             .map((layer) => {
               if (layer.type === 'image' && layer.image) {
-                return <ImageLayer key={layer.id} layer={layer} shapeRefs={shapeRefs} />;
+                return (
+                  <ImageLayer
+                    key={layer.id}
+                    layer={layer}
+                    shapeRefs={shapeRefs}
+                    canvasWidth={canvasWidth}
+                    canvasHeight={canvasHeight}
+                    keepInside={keepElementsInsideCanvas}
+                  />
+                );
               } else if (layer.type === 'text') {
-                return <TextLayer key={layer.id} layer={layer} shapeRefs={shapeRefs} />;
+                return (
+                  <TextLayer
+                    key={layer.id}
+                    layer={layer}
+                    shapeRefs={shapeRefs}
+                    canvasWidth={canvasWidth}
+                    canvasHeight={canvasHeight}
+                    keepInside={keepElementsInsideCanvas}
+                  />
+                );
               } else {
                 return null;
               }

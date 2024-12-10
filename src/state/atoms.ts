@@ -21,3 +21,8 @@ export const gridSizeState = atom<number>({
   key: 'gridSizeState',
   default: 50,
 });
+
+export const keepElementsInsideCanvasState = atom<boolean>({
+  key: 'keepElementsInsideCanvasState',
+  default: true,
+});

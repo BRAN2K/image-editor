@@ -9,9 +9,12 @@ import Konva from 'konva';
 interface TextLayerProps {
   layer: LayerType;
   shapeRefs: React.MutableRefObject<{ [key: string]: Konva.Node }>;
+  canvasWidth: number;
+  canvasHeight: number;
+  keepInside: boolean;
 }
 
-const TextLayer: React.FC<TextLayerProps> = ({ layer, shapeRefs }) => {
+const TextLayer: React.FC<TextLayerProps> = ({ layer, shapeRefs, canvasWidth, canvasHeight, keepInside }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedLayerId, setSelectedLayerId] = useRecoilState(selectedLayerIdState);
 
@@ -32,7 +35,15 @@ const TextLayer: React.FC<TextLayerProps> = ({ layer, shapeRefs }) => {
       {isEditing ? (
         <EditableTextArea layer={layer} onFinishEditing={handleFinishEditing} />
       ) : (
-        <ResizableText layer={layer} shapeRefs={shapeRefs} onSelect={onSelect} onDblClick={handleDblClick} />
+        <ResizableText
+          layer={layer}
+          shapeRefs={shapeRefs}
+          canvasWidth={canvasWidth}
+          canvasHeight={canvasHeight}
+          keepInside={keepInside}
+          onSelect={onSelect}
+          onDblClick={handleDblClick}
+        />
       )}
     </>
   );
