@@ -17,4 +17,5 @@ export interface LayerType {
   fontSize?: number;
   fontFamily?: string;
   fill?: string;
+  editable?: boolean;
 }

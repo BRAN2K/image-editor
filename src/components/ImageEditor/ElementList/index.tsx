@@ -1,7 +1,7 @@
 // src/components/ImageEditor/LayerList/index.ts
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { ElementListContainer, ImageItem, ImageList } from './style';
+import { ElementListContainer, ImageItem, ImageList, SectionTitle, TextItem, TextList } from './style';
 import { useRecoilState } from 'recoil';
 import { layersState, selectedLayerIdState } from '@/state/atoms';
 import { LayerType } from '@/types';
@@ -12,9 +12,16 @@ interface ImageData {
   url: string;
 }
 
+interface TextData {
+  id: string;
+  name: string;
+  content: string;
+}
+
 const ElementList: React.FC = () => {
   const [layers, setLayers] = useRecoilState(layersState);
   const [images, setImages] = useState<ImageData[]>([]);
+  const [texts, setTexts] = useState<TextData[]>([]);
 
   // Função para buscar as imagens da API
   useEffect(() => {
@@ -25,6 +32,17 @@ const ElementList: React.FC = () => {
     };
 
     fetchImages();
+  }, []);
+
+  // Buscar textos da API
+  useEffect(() => {
+    const fetchTexts = async () => {
+      const response = await fetch('/api/texts');
+      const data = await response.json();
+      setTexts(data);
+    };
+
+    fetchTexts();
   }, []);
 
   // Função para adicionar uma imagem ao canvas
@@ -48,6 +66,29 @@ const ElementList: React.FC = () => {
       };
       setLayers((prev) => [...prev, newLayer]);
     };
+  };
+
+  // Função para adicionar um texto não editável ao canvas
+  const handleDynamicAddText = (textData: TextData) => {
+    const newLayer: LayerType = {
+      id: uuidv4(),
+      name: textData.name,
+      type: 'text',
+      visible: true,
+      locked: false,
+      x: 100,
+      y: 100,
+      rotation: 0,
+      width: 200,
+      height: 50,
+      zIndex: layers.length,
+      text: textData.content,
+      fontSize: 24,
+      fontFamily: 'Arial',
+      fill: '#000000',
+      editable: false,
+    };
+    setLayers((prev) => [...prev, newLayer]);
   };
 
   // Função para adicionar uma nova camada ao carregar uma imagem
@@ -88,7 +129,7 @@ const ElementList: React.FC = () => {
   };
 
   // Função para adicionar uma nova camada de texto
-  const handleAddText = () => {
+  const handleAddEditableText = () => {
     const newLayer: LayerType = {
       id: uuidv4(),
       name: 'Camada de Texto',
@@ -111,9 +152,9 @@ const ElementList: React.FC = () => {
 
   return (
     <ElementListContainer>
-      <button onClick={handleAddText}>Adicionar Texto</button>
+      <button onClick={handleAddEditableText}>Adicionar Texto</button>
       <input type="file" title="Teste" onChange={handleUpload} multiple />
-      <h3>Imagens Disponíveis</h3>
+      <SectionTitle>Imagens Disponíveis</SectionTitle>
       <ImageList>
         {images.map((image) => (
           <ImageItem key={image.id} onClick={() => handleAddImage(image)}>
@@ -122,6 +163,14 @@ const ElementList: React.FC = () => {
           </ImageItem>
         ))}
       </ImageList>
+      <SectionTitle>Textos Disponíveis</SectionTitle>
+      <TextList>
+        {texts.map((text) => (
+          <TextItem key={text.id} onClick={() => handleDynamicAddText(text)}>
+            <span>{text.name}</span>
+          </TextItem>
+        ))}
+      </TextList>
     </ElementListContainer>
   );
 };

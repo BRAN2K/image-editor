@@ -19,7 +19,9 @@ const TextLayer: React.FC<TextLayerProps> = ({ layer, shapeRefs, canvasWidth, ca
   const [selectedLayerId, setSelectedLayerId] = useRecoilState(selectedLayerIdState);
 
   const handleDblClick = () => {
-    setIsEditing(true);
+    if (layer.editable !== false) {
+      setIsEditing(true);
+    }
   };
 
   const onSelect = () => {
