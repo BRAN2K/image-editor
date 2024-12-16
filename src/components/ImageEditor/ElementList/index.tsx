@@ -1,13 +1,54 @@
 // src/components/ImageEditor/LayerList/index.ts
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { ElementListContainer } from './style';
+import { ElementListContainer, ImageItem, ImageList } from './style';
 import { useRecoilState } from 'recoil';
 import { layersState, selectedLayerIdState } from '@/state/atoms';
 import { LayerType } from '@/types';
 
+interface ImageData {
+  id: string;
+  name: string;
+  url: string;
+}
+
 const ElementList: React.FC = () => {
   const [layers, setLayers] = useRecoilState(layersState);
+  const [images, setImages] = useState<ImageData[]>([]);
+
+  // Função para buscar as imagens da API
+  useEffect(() => {
+    const fetchImages = async () => {
+      const response = await fetch('/api/images');
+      const data = await response.json();
+      setImages(data);
+    };
+
+    fetchImages();
+  }, []);
+
+  // Função para adicionar uma imagem ao canvas
+  const handleAddImage = (imageData: ImageData) => {
+    const img = new window.Image();
+    img.src = imageData.url;
+    img.onload = () => {
+      const newLayer: LayerType = {
+        id: uuidv4(),
+        type: 'image',
+        name: imageData.name,
+        visible: true,
+        locked: false,
+        image: img,
+        x: 50,
+        y: 50,
+        width: img.width,
+        height: img.height,
+        rotation: 0,
+        zIndex: layers.length,
+      };
+      setLayers((prev) => [...prev, newLayer]);
+    };
+  };
 
   // Função para adicionar uma nova camada ao carregar uma imagem
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,6 +113,15 @@ const ElementList: React.FC = () => {
     <ElementListContainer>
       <button onClick={handleAddText}>Adicionar Texto</button>
       <input type="file" title="Teste" onChange={handleUpload} multiple />
+      <h3>Imagens Disponíveis</h3>
+      <ImageList>
+        {images.map((image) => (
+          <ImageItem key={image.id} onClick={() => handleAddImage(image)}>
+            <img src={image.url} alt={image.name} />
+            <span>{image.name}</span>
+          </ImageItem>
+        ))}
+      </ImageList>
     </ElementListContainer>
   );
 };
