@@ -1,8 +1,8 @@
-// src/components/ImageEditor/Editor/index.ts
 import React from 'react';
 import LayerList from '../LayerList';
 import CanvasArea from '../CanvasArea';
 import ElementList from '../ElementList';
+import TextPropertiesPanel from '../TextPropertiesPanel'; // Importar o painel
 import { EditorContainer, TopBar, Content } from './style';
 import { useRecoilState } from 'recoil';
 import { gridVisibleState, gridSizeState, keepElementsInsideCanvasState } from '@/state/atoms';
@@ -45,16 +45,8 @@ const Editor: React.FC = () => {
                 {size}px
               </option>
             ))}
-          </select>{' '}
+          </select>
         </label>
-        {/* <span>
-          Tamanho Ajustado do Grid:{' '}
-          {Math.min(
-            (window.innerHeight - 200) / Math.floor((window.innerHeight - 200) / gridSize),
-            (window.innerHeight - 200) / Math.floor((window.innerHeight - 200) / gridSize)
-          ).toFixed(2)}
-          px
-        </span> */}
         <label>
           <input type="checkbox" checked={keepElementsInsideCanvas} onChange={handleToggleKeepInsideCanvas} />
           Manter elementos dentro do canvas
@@ -65,6 +57,7 @@ const Editor: React.FC = () => {
         <CanvasArea />
         <ElementList />
       </Content>
+      <TextPropertiesPanel />
     </EditorContainer>
   );
 };

@@ -8,6 +8,8 @@ interface TextAreaProps {
   fontSize?: number;
   fontFamily?: string;
   fill?: string;
+  fontStyle?: string;
+  align?: CanvasTextAlign;
 }
 
 export const StyledTextarea = styled.textarea<TextAreaProps>`
@@ -30,4 +32,7 @@ export const StyledTextarea = styled.textarea<TextAreaProps>`
   margin: 0;
   white-space: pre-wrap;
   line-height: 1;
+  font-style: ${(props) => (props.fontStyle?.includes('italic') ? 'italic' : 'normal')};
+  font-weight: ${(props) => (props.fontStyle?.includes('bold') ? 'bold' : 'normal')};
+  text-align: ${(props) => props.align || 'left'};
 `;

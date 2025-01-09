@@ -1,5 +1,3 @@
-// src/components/ImageEditor/CanvasElements/EditableTextArea.tsx
-
 import React, { useEffect, useRef } from 'react';
 import { Html } from 'react-konva-utils';
 import { useRecoilState } from 'recoil';
@@ -57,6 +55,8 @@ const EditableTextArea: React.FC<EditableTextAreaProps> = ({ layer, onFinishEdit
         fontSize={layer.fontSize}
         fontFamily={layer.fontFamily}
         fill={layer.fill}
+        fontStyle={layer.fontStyle}
+        align={layer.align}
         onChange={handleChange}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}

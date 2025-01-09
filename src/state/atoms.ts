@@ -1,4 +1,3 @@
-// src/state/atoms.ts
 import { atom } from 'recoil';
 import { LayerType } from '@/types';
 
@@ -25,4 +24,9 @@ export const gridSizeState = atom<number>({
 export const keepElementsInsideCanvasState = atom<boolean>({
   key: 'keepElementsInsideCanvasState',
   default: true,
+});
+
+export const textPropertiesPositionState = atom<{ x: number; y: number } | null>({
+  key: 'textPropertiesPositionState',
+  default: null,
 });

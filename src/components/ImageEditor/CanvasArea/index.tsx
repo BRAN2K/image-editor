@@ -1,5 +1,3 @@
-// src/components/ImageEditor/CanvasArea/index.tsx
-
 import React, { useRef } from 'react';
 import { Layer } from 'react-konva';
 import { Canva, CanvasContainer } from './style';
@@ -79,6 +77,7 @@ const CanvasArea: React.FC = () => {
                     canvasWidth={canvasWidth}
                     canvasHeight={canvasHeight}
                     keepInside={keepElementsInsideCanvas}
+                    stageRef={stageRef} // Passando o stageRef
                   />
                 );
               } else {

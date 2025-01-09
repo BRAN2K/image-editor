@@ -17,5 +17,7 @@ export interface LayerType {
   fontSize?: number;
   fontFamily?: string;
   fill?: string;
+  fontStyle?: string; // Adicionado
+  align?: CanvasTextAlign; // Adicionado
   editable?: boolean;
 }
